@@ -13,9 +13,9 @@ public interface DiscussionPostRepository extends JpaRepository<DiscussionPost, 
     List<DiscussionPost> findByClassroomIdOrderByChapter_ChapterNumberAscPublishedAtAsc(Long classroomId);
     List<DiscussionPost> findByChapterIdOrderByPublishedAtAsc(Long chapterId);
 
-    @Query("SELECT DISTINCT dp FROM DiscussionPost dp JOIN dp.quotes q JOIN q.themes t WHERE t.name = :themeName ORDER BY dp.chapter.chapterNumber ASC, dp.publishedAt ASC")
+    @Query("SELECT dp FROM DiscussionPost dp WHERE dp.id IN (SELECT dp2.id FROM DiscussionPost dp2 JOIN dp2.quotes q JOIN q.themes t WHERE t.name = :themeName) ORDER BY dp.chapter.chapterNumber ASC, dp.publishedAt ASC")
     List<DiscussionPost> findByThemeNameOrderByChapterAndTime(@Param("themeName") String themeName);
 
-    @Query("SELECT DISTINCT dp FROM DiscussionPost dp JOIN dp.quotes q JOIN q.themes t WHERE t.name = :themeName AND dp.book.id = :bookId ORDER BY dp.chapter.chapterNumber ASC, dp.publishedAt ASC")
+    @Query("SELECT dp FROM DiscussionPost dp WHERE dp.book.id = :bookId AND dp.id IN (SELECT dp2.id FROM DiscussionPost dp2 JOIN dp2.quotes q JOIN q.themes t WHERE t.name = :themeName) ORDER BY dp.chapter.chapterNumber ASC, dp.publishedAt ASC")
     List<DiscussionPost> findByThemeNameAndBookIdOrderByChapterAndTime(@Param("themeName") String themeName, @Param("bookId") Long bookId);
 }
