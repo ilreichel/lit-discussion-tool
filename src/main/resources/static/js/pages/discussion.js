@@ -71,12 +71,13 @@ function renderSidebar(books) {
         return;
     }
 
-    sidebar.innerHTML = books.map(book => `
+    sidebar.innerHTML = books.map((book, idx) => `
         <div class="sidebar-book">
-            <div class="sidebar-book-title" data-book-id="${book.id}" tabindex="0" role="button">
+            <div class="sidebar-book-title${idx === 0 ? ' expanded' : ''}" data-book-id="${book.id}" tabindex="0" role="button">
+                <span class="sidebar-chevron"></span>
                 ${escapeHtml(book.title)}
             </div>
-            <div class="sidebar-chapters" id="chapters-${book.id}">
+            <div class="sidebar-chapters${idx === 0 ? '' : ' collapsed'}" id="chapters-${book.id}">
                 ${book.chapters && book.chapters.length > 0
                     ? book.chapters.map(ch => `
                         <div class="sidebar-chapter" data-chapter-id="${ch.id}" data-chapter-num="${ch.chapterNumber}"
@@ -91,7 +92,14 @@ function renderSidebar(books) {
     `).join('');
 
     sidebar.querySelectorAll('.sidebar-book-title').forEach(el => {
-        el.addEventListener('click', () => selectBook(el.dataset.bookId));
+        el.addEventListener('click', () => {
+            const bookId = el.dataset.bookId;
+            const chaptersEl = document.getElementById(`chapters-${bookId}`);
+            const isCollapsed = chaptersEl.classList.contains('collapsed');
+            chaptersEl.classList.toggle('collapsed');
+            el.classList.toggle('expanded');
+            selectBook(bookId);
+        });
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') el.click();
         });

@@ -233,6 +233,28 @@ body {
     cursor: pointer;
     border-radius: var(--radius);
     transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sidebar-chevron {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--color-teal);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+}
+
+.sidebar-book-title.expanded .sidebar-chevron {
+    transform: rotate(0);
+}
+
+.sidebar-book-title:not(.expanded) .sidebar-chevron {
+    transform: rotate(-90deg);
 }
 
 .sidebar-book-title:hover {
@@ -246,6 +268,10 @@ body {
     cursor: pointer;
     border-radius: var(--radius);
     transition: all 0.2s;
+}
+
+.sidebar-chapters.collapsed {
+    display: none;
 }
 
 .sidebar-chapter:hover {
