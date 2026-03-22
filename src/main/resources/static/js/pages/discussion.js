@@ -203,7 +203,7 @@ function showCreateEntryModal() {
     }
 
     const chaptersOptions = book.chapters.map(ch =>
-        `<option value="${ch.id}">Ch ${ch.chapterNumber}: ${escapeHtml(ch.title)}</option>`
+        `<option value="${ch.id}">${escapeHtml(ch.title)}</option>`
     ).join('');
 
     showModal(`
