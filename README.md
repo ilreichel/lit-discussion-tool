@@ -35,7 +35,7 @@ The application will be available at **http://localhost:8080**
 The application launches with a preconfigured demo:
 - **Username**: `student1`
 - **Class**: Intro to English Lit
-- **Book**: Brave New World by Aldous Huxley
+- **Books**: Brave New World by Aldous Huxley and To Kill a Mockingbird by Harper Lee
 
 Click "Login" with the pre-filled username to enter the experience.
 
