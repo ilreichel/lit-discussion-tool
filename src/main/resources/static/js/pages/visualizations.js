@@ -5,9 +5,11 @@ let vizState = {
     edges: [],
     selectedBooks: new Set(),
     allBooks: [],
+    classroomId: null,
 };
 
 function renderVisualizationsPage(container, params) {
+    vizState.classroomId = params.classroomId || null;
     container.innerHTML = `
         <div class="viz-page">
             <div class="viz-topbar">
@@ -29,7 +31,7 @@ function renderVisualizationsPage(container, params) {
     `;
 
     document.getElementById('btn-viz-back').addEventListener('click', () => {
-        Router.navigate('discussion');
+        Router.navigate('discussion', { classroomId: vizState.classroomId });
     });
 
     document.getElementById('viz-select-all').addEventListener('change', (e) => {
@@ -228,7 +230,7 @@ function renderVisualization(data) {
 
     node.on('click', (event, d) => {
         event.stopPropagation();
-        Router.navigate('themes', { themeName: d.id });
+        Router.navigate('themes', { themeName: d.id, classroomId: vizState.classroomId });
     });
 
     const tooltip = document.createElement('div');

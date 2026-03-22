@@ -32,7 +32,7 @@ function renderDiscussionPage(container, params) {
     `;
 
     document.getElementById('btn-data').addEventListener('click', () => {
-        Router.navigate('visualizations');
+        Router.navigate('visualizations', { classroomId: discussionState.classroomId });
     });
 
     document.getElementById('btn-create-entry').addEventListener('click', () => {
@@ -192,7 +192,7 @@ function renderPostCard(post) {
 }
 
 function navigateToTheme(themeName) {
-    Router.navigate('themes', { themeName });
+    Router.navigate('themes', { themeName, classroomId: discussionState.classroomId });
 }
 
 function showCreateEntryModal() {

@@ -2,10 +2,12 @@ let themesState = {
     currentTheme: null,
     allBooks: [],
     selectedBookId: null,
+    classroomId: null,
 };
 
 function renderThemesPage(container, params) {
     themesState.currentTheme = params.themeName || null;
+    themesState.classroomId = params.classroomId || null;
 
     container.innerHTML = `
         <div class="themes-page">
@@ -28,7 +30,7 @@ function renderThemesPage(container, params) {
     `;
 
     document.getElementById('btn-themes-back').addEventListener('click', () => {
-        Router.navigate('discussion');
+        Router.navigate('discussion', { classroomId: themesState.classroomId });
     });
 
     document.getElementById('themes-select-all').addEventListener('change', (e) => {
