@@ -385,23 +385,36 @@ async function handleSubmitEntry() {
 
     if (hasError) return;
 
-    const username = localStorage.getItem('username') || 'student1';
+    const username = AppState.username || 'student1';
+    const book = discussionState.books.find(b => b.id == discussionState.currentBookId);
+    const chapter = book ? book.chapters.find(ch => ch.id == chapterId) : null;
 
-    try {
-        await API.createPost({
-            username,
-            classroomId: discussionState.classroomId,
-            bookId: discussionState.currentBookId,
-            chapterId,
-            content,
-            quotes: detectedQuotes,
-        });
+    const localPost = {
+        id: Date.now(),
+        author: username === 'student1' ? 'Student 1' : username,
+        authorUsername: username,
+        bookId: discussionState.currentBookId,
+        bookTitle: book ? book.title : '',
+        chapterId: chapterId,
+        chapterNumber: chapter ? chapter.chapterNumber : 0,
+        chapterTitle: chapter ? chapter.title : '',
+        content: content,
+        publishedAt: new Date().toISOString(),
+        quotes: detectedQuotes.map((q, i) => ({
+            id: Date.now() + i,
+            text: q.text,
+            themes: [...q.themeNames],
+        })),
+    };
 
-        hideModal();
-        showToast('Discussion post created!', 'success');
-        detectedQuotes = [];
-        selectBook(discussionState.currentBookId);
-    } catch (err) {
-        quotesError.textContent = err.message;
-    }
+    discussionState.posts.push(localPost);
+    discussionState.posts.sort((a, b) => {
+        if (a.chapterNumber !== b.chapterNumber) return a.chapterNumber - b.chapterNumber;
+        return new Date(a.publishedAt) - new Date(b.publishedAt);
+    });
+
+    hideModal();
+    showToast('Discussion post created! (demo only — not saved)', 'success');
+    detectedQuotes = [];
+    renderPosts(discussionState.posts, book);
 }
