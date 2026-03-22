@@ -153,7 +153,7 @@ public class VisualizationService {
     }
 
     private void assignClusters(List<VisualizationNode> nodes, Map<String, Map<String, Integer>> cooccurrence) {
-        String[] colors = {"#335c67", "#fff3b0", "#e09f3e", "#9e2a2b"};
+        String[] colors = {"#335c67", "#6b4c91", "#2d6a4f", "#9e2a2b"};
         Map<String, Integer> clusterMap = new HashMap<>();
         int clusterId = 0;
 
@@ -178,7 +178,7 @@ public class VisualizationService {
     }
 
     private double computeNodeSize(long frequency) {
-        return Math.max(20, Math.min(80, 20 + frequency * 10));
+        return Math.max(60, Math.min(120, 60 + frequency * 10));
     }
 
     public List<Book> getAllBooks() {

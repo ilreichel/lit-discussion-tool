@@ -230,12 +230,72 @@ function renderVisualization(data) {
         .attr('fill', d => d.color)
         .attr('stroke', '#fff')
         .attr('stroke-width', 2)
-        .attr('opacity', 0.85);
+        .attr('opacity', 1);
 
     node.append('text')
         .attr('class', 'node-label')
-        .attr('dy', d => d.size / 2 + 14)
-        .text(d => d.label);
+        .attr('text-anchor', 'middle')
+        .each(function(d) {
+            const el = d3.select(this);
+            const radius = d.size / 2;
+            const padding = 6;
+            const usableR = radius - padding;
+            const usableD = usableR * 2;
+            const words = d.label.split(/\s+/);
+
+            let fontSize = Math.max(8, Math.min(16, usableR * 0.38));
+            const lineH = fontSize * 1.2;
+            const maxLines = Math.max(1, Math.floor(usableD / lineH));
+            const maxLineWidth = usableD * 0.88;
+
+            function wrapLines(size) {
+                const charW = size * 0.58;
+                const maxPerLine = Math.max(2, Math.floor(maxLineWidth / charW));
+                const lines = [];
+                let current = '';
+                for (const w of words) {
+                    const test = current ? current + ' ' + w : w;
+                    if (test.length > maxPerLine && current) {
+                        lines.push(current);
+                        current = w;
+                    } else {
+                        current = test;
+                    }
+                }
+                if (current) lines.push(current);
+                return lines;
+            }
+
+            let lines = wrapLines(fontSize);
+
+            while (lines.length > maxLines && fontSize > 7) {
+                fontSize -= 0.5;
+                lines = wrapLines(fontSize);
+            }
+
+            el.attr('font-size', fontSize + 'px')
+              .attr('fill', '#fff')
+              .attr('font-weight', 600);
+
+            if (lines.length <= maxLines) {
+                const lh = fontSize * 1.2;
+                const totalH = lines.length * lh;
+                const startY = -(totalH - lh) / 2;
+                lines.forEach((line, i) => {
+                    el.append('tspan')
+                        .attr('x', 0)
+                        .attr('dy', i === 0 ? startY + 'px' : lh + 'px')
+                        .text(line);
+                });
+            } else {
+                const w = words[0];
+                const maxC = Math.max(2, Math.floor(maxLineWidth / (fontSize * 0.58)));
+                el.append('tspan')
+                    .attr('x', 0)
+                    .attr('dy', '0.35em')
+                    .text(w.length > maxC ? w.slice(0, maxC - 1) + '\u2026' : w + '\u2026');
+            }
+        });
 
     node.on('click', (event, d) => {
         event.stopPropagation();

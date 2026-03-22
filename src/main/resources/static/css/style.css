@@ -939,9 +939,7 @@ select:focus-visible {
 
 /* Node Labels in Visualization */
 .node-label {
-    font-size: 11px;
-    fill: var(--color-text);
     pointer-events: none;
     text-anchor: middle;
-    font-weight: 600;
+    dominant-baseline: central;
 }
