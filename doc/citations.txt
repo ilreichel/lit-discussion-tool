@@ -1,0 +1,440 @@
+  --------------------------------------------------
+  1. ChatGPT
+  Description: Purpose: Revise our Project Specificiation.
+
+  Prompt Text: 
+  This is a program specification intended to produce an education website for a discussion post platform where educators can assign books for students to analyze using quotations and themes. Refine the language and formatting for clear interpretation by an AI model in order to clear vague or indistinct instructions. In other words, make sure the program specification is as specific and clear as possible. Make sure to add suggestions to correct possible misinterpretations and suggest more efficient routes to execution and optimize quality regarding performance, aesthetics, contents, design, and efficiency. Address errors that might occur and suggest fail-safes to avoid crashes or poor performance. Follow best practices with regard to variable naming and code modularity, and make sure code is thoroughly documented and type-hinted. Do not generate any code. The program specification will be included below: Project Specification
+  Overview
+  Educational tool for discussion based activities on humanities-based literature and scientific textbooks. Intended for usage in secondary and undergraduate education.
+  Uses data visualization to map out themes occurring in the books and categorizes recurring themes as larger data elements.
+  Online platform for students to join a classroom and create discussion posts relating to a book or textbook. There will be a main class page, discussion post page, and a data visualization page. The main class page should display textbooks and books added by an educator. 
+  The discussion post page will exist for every book and will be organized by chapter modules, Students will submit discussion posts to these modules. Discussion posts are organized by chapter and utilize a quote database.
+  The entries for the discussion posts objects should include the details of the student, chapter, quotes included, general text, and the tag. The student is only manually inputting the text and selecting quotes, and selecting a tag that is associated with the quote but the other information will be shown as specified in the design requirements.
+  The program recognizes quotes inside of discussion posts and automatically adds it to the database with an associated tag. The program forces an associated tag to be created for the quote object and tracks how many times a tag is used in all of the books. The tags will be kept track of in a general database as well which will show how many times a tag reoccurs in the class overall. 
+  The data mapping will use semantic associations to connect themes and cluster accordingly. The data mapping can be toggled between an overall mapping and mapping specific to a book.
+  A naive login system will temporarily be implemented where students and educators will use their names to login. This is for demonstration purposes and only one instance of a student and educator account should be created. For the student account created for the demonstration there should be a preexisting class they are enrolled in with a book included so that the educator features and educator-view can be ignored for now.
+
+  Program Requirements
+  The programming language to be used should be Java for backend and the frontend should be in html and deployed in vercel.
+  Follow best practices with regards to variable naming and code modularity, and make sure code is thoroughly documented and type hinted.
+
+  Data Visualization
+  Use semantic mapping to connect tagged themes, semantic clustering with coloring of similar themes, zooming features that will hide smaller themes, and dynamic nodes with size displaying the theme recurrence in discussion posts. Interactive nodes that link to the theme page and display discussion posts with that tag.
+
+  Design Requirements
+  Color Palette: ["#335c67","#fff3b0","#e09f3e","#9e2a2b"]
+  Design should be intuitive for users and be visually appealing.
+  Design should include four pages: home, discussion, visualizations, and themes:
+  Home: On the top right-hand side, there should be a login feature that accepts a username. Below this, there should be text that says “My Classes”. Below this, there should be a box for the demo class.
+  Discussion: Design should include a sidebar including book titles and chapters on the left-hand side. The remainder of the page should include the book title at the top and should have discussion posts sorted by chapter number. The top right-hand corner should include a rectangular button.
+  Visualization: On the bottom right-hand side, there should be a box that contains checkbox logic listing select all and all of the book titles. There should be a back button on the top left-hand side. On the top right-hand side, there should be a rectangular button. There should be icons to zoom in and out in the bottom right corner. The remainder of this page should include a data visualization structure like the image attached.
+  Themes: On the bottom right-hand side, there should be a box that contains checkbox logic listing select all and all of the book titles. There should be a back button on the top left-hand side. The remainder of the page should include the theme name at the top and the discussion posts listed by chapter below this.
+
+  --------------------------------------------------
+  2. ChatGPT
+  Description: Purpose: Provide clarity to create final project specification
+
+  Prompt Text:
+
+  Add the following revisions and remove ONLY what is specified under remove. Make sure to keep as much of the project specification the same while applying revisions. If it doesn’t need to be updated, don’t update it.
+  Revisions: 
+  Discussion posts are organized by chapter, then publication time, and utilize a quote database.
+  The tag associations will be calculated using Cosine Similarity as the Semantic Similarity Score. Use the PostgreSQLDynamic database. Prevent high-frequency tags from covering the entire screen. Use a Force-Directed Graph algorithm. Similar themes should be assigned the same color from the palette to represent a "cluster."
+
+  The programming will be completed in opencode with the Claude Sonnet model.
+  There should not be access to an educator-only view of the application, instead there should be a preexisting class named “Intro to English Lit” and the book will be Brave New World by Aldous Huxley. The educator features accessed from the educator view can be ignored for now because it won’t be implemented in the demo.
+  The words themes and tags are used essentially interchangeably. The themes of the text in the discussion posts are being tagged.
+  Require at least one quotation in the discussion post before submission and a minimum of one tag per quotation. Multiple tags per quote are allowed. Ensure that each quotation is greater than two words.
+  Repeat quotations are allowed; ensure that a tag created by another user can not be removed. If there is already a tag associated with the quote, it is not required for the user to enter another, but it is still an option. When repeat quotations are used then ThemeFrequency of the tags associated with the quote will increase each time by one. 
+  For the discussion page, create a bottom right action create entry button that prompts the entry creation pop up. When the book or chapter button on the sidebar is clicked it should jump to the start of the book section or the chapter section respectively. The top right action button should be a button named Data that brings you to the data visualization page. The quotes should always be autodetected and the tags are manually entered. The system should be able to support multiple classes in the future.
+
+  Remove:
+  Omit the part about type-hinting but keep that clarification that all classes, method signatures, DTOs, and collection types must be explicitly declared and documented. Remove this, “assign the quote to an explicit fallback category such as “Uncategorized.”” There must be a tag assigned if the quote does not already have them. Remove the right-action button requirement for the data visualization page. Remove the vercel deployment as it will be implemented using opencode.
+
+  --------------------------------------------------
+  3. opencode
+
+  Purpose: Develop an interface complying with the project speifications.
+
+  Prompt text:
+
+  Project Specification
+1. Overview
+Build an educational discussion platform for humanities-based literature and scientific textbooks. The platform is intended for secondary and undergraduate education and supports classroom-based reading analysis using quotations and themes/tags.
+The application should provide:
+a classroom landing page,
+a discussion post page organized by book and chapter,
+a data visualization page for theme/tag relationships,
+a theme page showing posts associated with a selected theme/tag.
+The implementation will be completed in opencode
+
+2. Core Purpose
+The system must allow students to:
+join a preexisting class,
+view assigned books,
+read discussion posts,
+create discussion entries tied to chapters,
+associate quotations with themes/tags,
+explore theme/tag relationships through visualization.
+The system must support multiple classes in the future, even though the demo experience only requires one preexisting class.
+
+3. Demo Scope and Access Model
+3.1 Login
+The login system will be demonstrated using a default account
+No password, authentication provider, or recovery system is required for the demo.
+The demo must include exactly one student account experience.
+The temporary default user account should be named “student1” and entries created will use this
+There should not be an educator-only view in the demo.
+Educator features are not implemented for the demo and may be ignored for now.
+3.2 Preexisting Demo Data
+The demo must include:
+a preexisting class named “Intro to English Lit”
+a preloaded book assigned to that class: Brave New World by Aldous Huxley
+The student should enter directly into the experience with this class and book already available.
+
+4. Information Architecture
+The application must contain four primary pages:
+Home
+Discussion
+Visualizations
+Themes
+Each page must follow the layout and behavior requirements below.
+
+5. Data Model Requirements
+The implementation must use clearly defined, strongly declared, and documented data structures. All classes, method signatures, DTOs, and collection types must be explicitly declared and documented.
+5.1 Core Entities
+The system should define data models for at least the following entities:
+User
+Student
+Class
+Book/Textbook
+Chapter
+DiscussionPost
+Quote
+Theme
+ThemeFrequency
+VisualizationNode
+VisualizationEdge
+5.2 Discussion Post Fields
+Each discussion post must store:
+student identity
+associated class
+associated book
+chapter number or chapter identifier
+publication time / creation timestamp
+quote(s) used
+manually entered tag(s)/theme(s)
+general discussion text
+any system-generated metadata needed for analytics
+5.3 Quote and Tag Rules
+Quotes must always be autodetected by the system.
+Tags/themes are manually entered by the user.
+The words themes and tags are used interchangeably throughout this specification.
+A discussion post must contain at least one quotation before submission.
+Each quotation must be greater than two words.
+Each quotation must have a minimum of one tag.
+Multiple tags per quote are allowed.
+If a quote already has one or more tags, the user does not need to enter another tag, but may still add additional tags.
+Repeat quotations are allowed.
+When a repeat quotation is used, the ThemeFrequency of the associated tags must increase by one each time the quotation is reused.
+A tag created by another user must not be removable.
+If a quotation exists without an associated tag, the system must require a tag to be assigned before the post can be submitted.
+5.4 Naming and Modularity Standards
+Use descriptive, consistent names for variables, methods, classes, and UI elements.
+Avoid abbreviations unless they are universally clear.
+Separate concerns into distinct modules for:
+login/session handling,
+class management,
+discussion post management,
+quote detection and storage,
+tag/theme analytics,
+visualization generation,
+page routing/navigation.
+Keep business logic out of presentation components whenever possible.
+Use reusable helper functions for:
+quote detection,
+tag aggregation,
+sorting posts by chapter and publication time,
+building visualization nodes and edges.
+
+6. Page Specifications
+6.1 Home Page
+The Home page functions as the landing dashboard.
+Required Layout
+Top-Left:
+Large text saying “Discussion Tool” as the title of the website
+Top-right corner:
+username login input
+login action control
+Below the login area:
+section title: My Classes
+Below “My Classes”:
+a visible demo class card or box
+the demo class must be preloaded and accessible
+Behavior
+Selecting the demo class should navigate the user into the class experience.
+The page should clearly communicate class enrollment status.
+The layout must remain usable on smaller screens.
+
+6.2 Discussion Page
+The Discussion page must present book-based discussion content organized by chapter and then by publication time.
+Required Layout
+Left sidebar:
+list of book titles
+nested or related chapter list for each book
+Main content area:
+selected book title at the top
+discussion posts sorted first by chapter number, then by publication time
+Top-right corner:
+a rectangular button labeled Data
+Bottom-right corner:
+a rectangular Create Entry button
+Behavior
+Clicking a book should jump to the start of that book section.
+Clicking a chapter should jump to the start of that chapter section.
+Clicking the Data button should navigate to the data visualization page.
+Clicking Create Entry should open the entry creation pop-up.
+Discussion posts must appear in chapter order, then by publication time within each chapter.
+Each post should visibly include:
+student name or identifier,
+discussion text,
+automatically detected quote(s) within discussion,
+manually entered tag(s)/theme(s) required pop-up prompt for quotes,
+publication time.
+Submission Rules
+A post cannot be submitted unless it contains at least one quotation.
+Each quotation must contain more than two words.
+Each quotation must have at least one tag.
+If a quotation already has associated tags, additional tags are optional.
+Repeat quotations must increase the ThemeFrequency count for associated tags.
+Tags created by another user cannot be removed.
+Behavior Safeguards
+If a chapter has no posts, display a clear empty-state message.
+If a book has no chapters loaded, show a structured placeholder instead of a blank area.
+If a post is missing required fields, prevent submission and explain what is missing.
+Preserve user input if validation fails.
+
+6.3 Visualizations Page
+The Visualizations page must display an interactive semantic graph of themes/tags.
+Required Layout
+Bottom-right corner:
+a checkbox panel containing:
+“Select All”
+all book titles
+Top-left corner:
+back button
+Main area:
+interactive graph visualization similar to the provided reference image
+Visualization Behavior
+The graph must:
+represent themes/tags as nodes,
+use semantic clustering to group related themes,
+use Cosine Similarity as the Semantic Similarity Score,
+use a Force-Directed Graph algorithm,
+visually distinguish related themes using the same color from the palette to represent a cluster,
+scale node size according to recurrence/frequency,
+support zooming and panning,
+hide or de-emphasize minor nodes when zoomed out to reduce clutter,
+prevent high-frequency tags from covering the entire screen,
+allow node selection,
+allow clicking a node to navigate to the related theme page or filtered theme view.
+Scope Control
+The checkbox panel must allow filtering by:
+all books, or
+one or more selected books.
+The graph must refresh dynamically based on the selected scope.
+The selected scope should also affect node frequency counts if the visualization is scoped to selected books only.
+Visualization Performance Requirements
+Use incremental rendering or efficient graph updates for large datasets.
+Avoid re-rendering the entire graph when only one filter changes.
+Cap visible node density or apply progressive simplification if the graph becomes too dense.
+Lazy-load graph data if necessary.
+Visualization Fail-Safes
+If semantic clustering cannot complete, fall back to a simpler grouping strategy based on exact tag matching.
+If graph data is missing or invalid, display a stable fallback state rather than crashing.
+Prevent infinite layout loops or unbounded force simulations.
+Protect against overlapping labels by truncating, hiding, or collapsing labels at low zoom levels.
+
+6.4 Themes Page
+The Themes page must show theme-specific discussion content.
+Required Layout
+Bottom-right corner:
+checkbox panel with:
+“Select All”
+all book titles
+Top-left corner:
+back button
+Main content area:
+theme name at the top
+discussion posts listed below, sorted by chapter and then publication time
+Behavior
+Selecting a theme should show all posts associated with that theme.
+Posts should be grouped or sorted by chapter, then by publication time.
+Filtering by book must update the displayed posts.
+Empty-state handling must be provided when a theme has no posts.
+
+7. Data Visualization Logic
+The visualization should use semantic associations to connect themes/tags. The implementation should interpret semantic mapping as follows:
+Themes/tags with similar meaning or frequent co-occurrence should be placed near each other.
+Semantic relation should be shown through proximity to other nodes
+Node should be in the form of circles with readable labels that adjust with sizing
+Theme clusters should be visually grouped.
+Repeated themes should appear larger or more prominent.
+More frequent themes should remain readable at lower zoom levels.
+Nodes should be clickable and should reveal theme-related discussion posts.
+
+8. Design Requirements
+8.1 Color Palette
+Use the following palette consistently across the application:
+#335c67
+#fff3b0
+#e09f3e
+#9e2a2b
+8.2 Visual Style
+The design must be intuitive, clean, and visually appealing.
+Use strong contrast for readability.
+Maintain consistent spacing, typography, and card styling.
+Reserve accent colors for interactive elements, labels, and highlights.
+Keep the layout readable on both desktop and smaller screens.
+Assign the same palette color to similar themes within the same cluster.
+8.3 Layout Consistency
+Use a shared layout system across pages so navigation, buttons, and side panels behave consistently.
+Keep primary navigation predictable.
+Keep interactive controls in the same general locations across pages whenever possible.
+
+9. Technical Requirements
+9.1 Stack
+Backend: Java
+Frontend: HTML
+Database: PostgreSQLDynamic
+9.2 Architecture Clarification
+The implementation should be structured so that the frontend and backend remain modular and maintainable. The system should support multiple classes in the future, even though the demo uses only one class.
+9.3 Code Quality Standards
+Use strong typing throughout the backend.
+Document all public classes, methods, and data models.
+Use modular architecture.
+Keep functions single-purpose.
+Prefer small, testable service classes over large monolithic files.
+Add validation at every user input boundary.
+Use consistent error handling conventions.
+
+10. Error Handling and Fail-Safes
+The implementation should anticipate and safely handle the following problems:
+Data and Input Problems
+missing username
+invalid chapter selection
+empty discussion post submission
+missing quote text
+quote shorter than or equal to two words
+missing tag/theme
+duplicate quotes
+duplicate book titles
+invalid or null class references
+UI and Rendering Problems
+graph layout overload
+too many nodes or edges for the viewport
+empty books list
+no discussion posts for a selected filter
+failed navigation between pages
+System Problems
+unavailable or partially loaded visualization data
+inconsistent counts between book-level and class-level tag statistics
+failed save operations
+partial page data loads
+Required Safeguards
+validate inputs before persistence
+show user-friendly error messages
+preserve previously entered user input when validation fails
+never crash the entire page due to one bad record
+use fallback UI states for missing or incomplete data
+log recoverable errors for debugging without exposing internal stack traces to users
+
+11. Performance Guidance
+To improve efficiency and reliability:
+Precompute recurring tag counts where possible.
+Cache class-wide and book-specific analytics.
+Avoid recomputing graph layout on every small interaction.
+Paginate or virtualize long discussion lists if necessary.
+Defer heavy visualization processing until the page is visible.
+Load only the currently selected book or theme content when feasible.
+Use efficient data structures for lookup by book, chapter, quote, and tag/theme.
+
+12. Accessibility and Usability Recommendations
+Although not originally specified, the following should be included to improve quality:
+keyboard-accessible controls
+visible focus states
+sufficient color contrast
+text alternatives for icons
+clear button labels
+predictable navigation
+readable font sizes
+responsive layout behavior
+
+13. Clarifications Before Development
+Normalize quotes for matching
+Multiple tags per quote should be displayed as separate chips
+Chapter jumps should be instant
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Update the data visualization
+
+  Prompt Text: 
+
+  Make sure there are visualization edges between nodes that map connections based on semantic similarity score exceeding a threshold (e.g., > 0.3) add the edge between them. The threshold should adjust accordingly with the size of the dataset of tags. The length of the edges and proximity of nodes resulting in clustering should be determined by the scale of the semantic similarity score as well. Make sure the visualization edges are viewable in the data page even when the “Select All” option is toggled.
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Update the data visualization
+
+  Prompt text:
+
+  Increase the minimum size of the UI circles. Make sure the labelling of the nodes is within the circle UI element and the text size adjusts with the size of the node. The text should be fixed to the node and move with the node. Ensure that the text fits within the node circles and there is spacing between the text and the border of the node for better visibility. Remember that node size is based on tag frequency. Make the node background 100% opaque. Make sure the text is centered in the UI circle that it is associated with. Do not use the yellow color in the visualizations page.
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Fix design elements
+
+  Prompt text:
+   Make sure the quotation marks around the quotes don’t duplicate. When creating example chapters, just name it “Chapter 1”, “Chapter 2”, etc. Do not name it anything like “Ch 1: Chapter 1”
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Fix design elements
+
+  Prompt text:
+  Fix the drop-down box in the entries section so that it shows the updated/fixed chapter names instead of something like “Ch 2: Chapter 2”.
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Fix back button
+
+  Prompt text: 
+  Fix the back button so when on the theme page, it returns the user to the data page and so when on the data page, it returns the user to the discussion page.
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Toggle chapters within books
+
+  Prompt text: 
+  Toggle the chapter view within a book so the chapters can be hidden
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Show further extent of program
+
+  Prompt text:
+  Add at least one example discussion post which has multiple quotes to demonstrate this feature. Add an additional book in the class on “to kill a mockingbird” by Harper Lee
+
+--------------------------------------------------
+  1. opencode
+  Purpose: Fix login
+
+  Prompt text: 
+  Keep the login textbox autofilled as “student1”, but display a screen that is without any available classes until the login button is clicked. After the login button is clicked, show the student1 example view with the Intro to English Lit class. This class should not be accessible if not logged in.
+ 
+ --------------------------------------------------
+  1. ChatGPT
+  Purpose: Generate skeleton txt file
+
+  Prompt text: Generate a txt skeleton file I can use as a place to hold my prompt citations in my programming project
