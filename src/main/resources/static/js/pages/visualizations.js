@@ -81,7 +81,7 @@ function renderBookFilters(books) {
 
 async function updateVizFilter() {
     const selectAll = document.getElementById('viz-select-all');
-    const checkboxes = document.querySelectorAll('#viz-book-cb:checked, .viz-book-cb:checked');
+    const checkboxes = document.querySelectorAll('.viz-book-cb:checked');
     const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
 
     if (selectedIds.length === 0) {
@@ -117,6 +117,7 @@ async function updateVizFilter() {
                 if (mergedEdges.has(key)) {
                     const existing = mergedEdges.get(key);
                     existing.weight += e.weight;
+                    existing.similarity = Math.max(existing.similarity, e.similarity);
                 } else {
                     mergedEdges.set(key, { ...e });
                 }
@@ -166,17 +167,22 @@ function renderVisualization(data) {
     svg.call(zoom);
 
     const nodes = data.nodes.map(d => ({ ...d }));
+    const nodeIds = new Set(nodes.map(n => n.id));
     const edges = data.edges.map(d => ({ ...d })).filter(e => {
-        return nodes.some(n => n.id === e.source) && nodes.some(n => n.id === e.target);
+        return nodeIds.has(e.source) && nodeIds.has(e.target);
     });
 
     const maxFreq = Math.max(...nodes.map(n => n.frequency), 1);
 
     const simulation = d3.forceSimulation(nodes)
-        .force('link', d3.forceLink(edges).id(d => d.id).distance(d => 100 / (d.similarity + 0.1)).strength(d => d.similarity * 0.5))
-        .force('charge', d3.forceManyBody().strength(-200).distanceMax(400))
+        .force('link', d3.forceLink(edges).id(d => d.id).distance(d => {
+            return 250 * (1 - d.similarity) + 20;
+        }).strength(d => {
+            return d.similarity * d.similarity * 0.8;
+        }))
+        .force('charge', d3.forceManyBody().strength(-300).distanceMax(500))
         .force('center', d3.forceCenter(width / 2, height / 2))
-        .force('collision', d3.forceCollide().radius(d => d.size / 2 + 10))
+        .force('collision', d3.forceCollide().radius(d => d.size / 2 + 15))
         .force('x', d3.forceX(width / 2).strength(0.05))
         .force('y', d3.forceY(height / 2).strength(0.05))
         .alphaDecay(0.02)
@@ -189,9 +195,12 @@ function renderVisualization(data) {
         .data(edges)
         .enter()
         .append('line')
-        .attr('stroke', '#ccc')
-        .attr('stroke-width', d => Math.max(1, d.weight))
-        .attr('stroke-opacity', 0.4);
+        .attr('stroke', d => {
+            const sourceNode = nodes.find(n => n.id === (d.source.id || d.source));
+            return sourceNode ? sourceNode.color : '#bbb';
+        })
+        .attr('stroke-width', d => 1 + d.similarity * 4)
+        .attr('stroke-opacity', d => 0.3 + d.similarity * 0.5);
 
     const node = g.append('g')
         .selectAll('g')
