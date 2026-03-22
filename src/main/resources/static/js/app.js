@@ -1,11 +1,12 @@
+let AppState = {
+    username: null,
+};
+
 document.addEventListener('DOMContentLoaded', () => {
     const usernameInput = document.getElementById('username-input');
     const loginBtn = document.getElementById('login-btn');
 
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-        usernameInput.value = storedUsername;
-    }
+    usernameInput.value = 'student1';
 
     loginBtn.addEventListener('click', handleLogin);
     usernameInput.addEventListener('keydown', (e) => {
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const user = await API.login(username);
+            AppState.username = user.username;
             localStorage.setItem('username', user.username);
             showToast(`Welcome, ${user.displayName}!`, 'success');
             Router.navigate('home');

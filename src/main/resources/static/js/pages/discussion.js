@@ -6,6 +6,16 @@ let discussionState = {
 };
 
 function renderDiscussionPage(container, params) {
+    if (!AppState.username) {
+        container.innerHTML = `
+            <div class="empty-state" style="padding:60px 20px;">
+                <h3>Please log in</h3>
+                <p>Enter your username and click Login to access discussions.</p>
+            </div>
+        `;
+        return;
+    }
+
     discussionState.classroomId = params.classroomId || null;
 
     if (!discussionState.classroomId) {

@@ -1,5 +1,18 @@
 function renderHomePage(container, params) {
-    const username = localStorage.getItem('username') || 'student1';
+    if (!AppState.username) {
+        container.innerHTML = `
+            <div class="home-page">
+                <h2 class="section-title">My Classes</h2>
+                <div class="class-grid">
+                    <div class="empty-state">
+                        <h3>Please log in</h3>
+                        <p>Enter your username and click Login to see your classes.</p>
+                    </div>
+                </div>
+            </div>
+        `;
+        return;
+    }
 
     container.innerHTML = `
         <div class="home-page">
@@ -10,7 +23,7 @@ function renderHomePage(container, params) {
         </div>
     `;
 
-    loadClasses(username);
+    loadClasses(AppState.username);
 }
 
 async function loadClasses(username) {
@@ -38,6 +51,10 @@ async function loadClasses(username) {
 
         grid.querySelectorAll('.class-card').forEach(card => {
             card.addEventListener('click', () => {
+                if (!AppState.username) {
+                    showToast('Please log in first', 'error');
+                    return;
+                }
                 const classId = card.dataset.classId;
                 Router.navigate('discussion', { classroomId: classId });
             });
