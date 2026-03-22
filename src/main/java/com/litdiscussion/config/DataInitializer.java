@@ -123,6 +123,62 @@ public class DataInitializer implements CommandLineRunner {
                 java.util.Map.entry("\"everyone belongs to everyone else\"",
                         new String[]{"Identity", "Conditioning"})
         );
+
+        Book tkam = new Book("To Kill a Mockingbird", "Harper Lee",
+                "A novel about racial injustice in the Deep South, seen through the eyes of a young girl.");
+        tkam = bookRepository.save(tkam);
+
+        introLit.getBooks().add(tkam);
+        classroomRepository.save(introLit);
+
+        String[] tkamChapters = {
+            "Chapter 1", "Chapter 2", "Chapter 3", "Chapter 4", "Chapter 5",
+            "Chapter 6", "Chapter 7", "Chapter 8", "Chapter 9", "Chapter 10"
+        };
+
+        for (int i = 0; i < tkamChapters.length; i++) {
+            Chapter chapter = new Chapter(i + 1, tkamChapters[i], tkam);
+            chapterRepository.save(chapter);
+        }
+
+        Theme racialInjustice = themeRepository.save(new Theme("Racial Injustice", "system"));
+        Theme moralCourage = themeRepository.save(new Theme("Moral Courage", "system"));
+        Theme innocence = themeRepository.save(new Theme("Innocence", "system"));
+        Theme empathy = themeRepository.save(new Theme("Empathy", "system"));
+        Theme prejudice = themeRepository.save(new Theme("Prejudice", "system"));
+        Theme comingOfAge = themeRepository.save(new Theme("Coming of Age", "system"));
+        Theme socialClass = themeRepository.save(new Theme("Social Class", "system"));
+
+        Chapter tkCh1 = chapterRepository.findByBookIdAndChapterNumber(tkam.getId(), 1).orElseThrow();
+        Chapter tkCh3 = chapterRepository.findByBookIdAndChapterNumber(tkam.getId(), 3).orElseThrow();
+        Chapter tkCh9 = chapterRepository.findByBookIdAndChapterNumber(tkam.getId(), 9).orElseThrow();
+        Chapter tkCh10 = chapterRepository.findByBookIdAndChapterNumber(tkam.getId(), 10).orElseThrow();
+
+        createSamplePost(student1, introLit, tkam, tkCh1,
+                "Scout's narration immediately establishes Maycomb as a town steeped in tradition and hierarchy. Her description of the Radley house as a place of mystery sets up Boo Radley as a symbol of the town's fear of the unknown. The line \"Maycomb was an old town, but it was a tired old town when I first knew it\" captures the stagnation of the community.",
+                "\"Maycomb was an old town, but it was a tired old town when I first knew it\"", "Coming of Age", "Social Class");
+
+        createSamplePost(student1, introLit, tkam, tkCh3,
+                "When Scout wants to quit school after her first day, Atticus teaches her one of the novel's most important lessons. He tells her \"You never really understand a person until you consider things from his point of view\" and \"until you climb into his skin and walk around in it.\" This lesson of empathy becomes the moral backbone of the entire story.",
+                "\"You never really understand a person until you consider things from his point of view\"", "Empathy", "Moral Courage");
+
+        createSamplePostWithQuotes(student1, introLit, tkam, tkCh9,
+                "Atticus's decision to defend Tom Robinson puts the Finch family at odds with the town. He explains to Scout that true courage isn't a man with a gun, but \"when you know you're licked before you begin but you begin anyway and you see it through no matter what.\" This definition of courage is contrasted with the town's mob mentality, showing that moral conviction requires far more bravery than physical confrontation.",
+                java.util.Map.entry("\"when you know you're licked before you begin but you begin anyway and you see it through no matter what\"",
+                        new String[]{"Moral Courage", "Racial Injustice"}),
+                java.util.Map.entry("\"before I can live with other folks I've got to live with myself\"",
+                        new String[]{"Empathy", "Moral Courage"})
+        );
+
+        createSamplePostWithQuotes(student1, introLit, tkam, tkCh10,
+                "The mad dog incident serves as a powerful metaphor. Atticus, who the children see as old and passive, turns out to be the best shot in the county. Miss Maudie explains that \"people in their right minds never take pride in their talents\" - Atticus's humility is part of his moral strength. Scout realizes her father is \"the bravest man who ever lived,\" not for his shooting skills, but for his willingness to stand up for what is right despite knowing he will lose.",
+                java.util.Map.entry("\"people in their right minds never take pride in their talents\"",
+                        new String[]{"Moral Courage", "Innocence"}),
+                java.util.Map.entry("\"the bravest man who ever lived\"",
+                        new String[]{"Coming of Age", "Moral Courage"}),
+                java.util.Map.entry("\"it's a sin to kill a mockingbird\"",
+                        new String[]{"Innocence", "Racial Injustice"})
+        );
     }
 
     private void createSamplePost(User author, Classroom classroom, Book book, Chapter chapter,
