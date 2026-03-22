@@ -169,15 +169,19 @@ function renderPosts(posts, book) {
 }
 
 function renderPostCard(post) {
-    const quotesHtml = post.quotes.map(q => {
-        const raw = q.text;
-        const clean = raw.replace(/^["\u201C]+/, '').replace(/["\u201D]+$/, '');
-        return `
-        <div class="post-quote">"${escapeHtml(clean)}"</div>
-        <div class="post-themes">
-            ${q.themes.map((t, i) => `<span class="theme-chip" data-color="${i % 4}" onclick="navigateToTheme('${escapeHtml(t)}')">${escapeHtml(t)}</span>`).join('')}
-        </div>`;
-    }).join('');
+    const quotesHtml = post.quotes.length > 0
+        ? `<div class="post-quotes-section">${post.quotes.map((q, i) => {
+            const raw = q.text;
+            const clean = raw.replace(/^["\u201C]+/, '').replace(/["\u201D]+$/, '');
+            return `
+            <div class="post-quote-block">
+                <div class="post-quote">"${escapeHtml(clean)}"</div>
+                <div class="post-themes">
+                    ${q.themes.map((t, j) => `<span class="theme-chip" data-color="${j % 4}" onclick="navigateToTheme('${escapeHtml(t)}')">${escapeHtml(t)}</span>`).join('')}
+                </div>
+            </div>`;
+        }).join('')}</div>`
+        : '';
 
     return `
         <article class="post-card">

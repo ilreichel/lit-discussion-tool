@@ -155,7 +155,7 @@ async function loadThemePosts() {
 
         const grouped = {};
         allPosts.forEach(post => {
-            const key = `${post.bookTitle} - Ch ${post.chapterNumber}`;
+            const key = `${post.bookTitle} - ${post.chapterTitle}`;
             if (!grouped[key]) {
                 grouped[key] = {
                     bookTitle: post.bookTitle,

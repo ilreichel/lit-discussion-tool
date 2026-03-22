@@ -115,6 +115,14 @@ public class DataInitializer implements CommandLineRunner {
         createSamplePost(student1, introLit, braveNewWorld, ch3,
                 "Mond's explanation that \"stability isn't nearly so spectacular as instability\" reveals the trade-off the World State has made - sacrificing art, passion, and truth for comfort and predictability.",
                 "\"stability isn't nearly so spectacular as instability\"", "Social Control", "Technology", "Dystopia");
+
+        createSamplePostWithQuotes(student1, introLit, braveNewWorld, ch1,
+                "The opening chapter masterfully weaves together multiple dystopian themes. The Director boasts that the Bokanovsky Process is \"one of the major instruments of social stability\" which immediately frames science as a tool of oppression. Meanwhile, the hypnopaedic slogan \"everyone belongs to everyone else\" erases the concept of personal bonds, reducing human connection to a collective mandate.",
+                java.util.Map.entry("\"one of the major instruments of social stability\"",
+                        new String[]{"Dystopia", "Social Control"}),
+                java.util.Map.entry("\"everyone belongs to everyone else\"",
+                        new String[]{"Identity", "Conditioning"})
+        );
     }
 
     private void createSamplePost(User author, Classroom classroom, Book book, Chapter chapter,
@@ -129,5 +137,22 @@ public class DataInitializer implements CommandLineRunner {
             quote.getThemes().add(theme);
         }
         quoteRepository.save(quote);
+    }
+
+    @SafeVarargs
+    private void createSamplePostWithQuotes(User author, Classroom classroom, Book book, Chapter chapter,
+                                            String content, java.util.Map.Entry<String, String[]>... quotes) {
+        DiscussionPost post = new DiscussionPost(author, classroom, book, chapter, content);
+        post.setPublishedAt(LocalDateTime.now().minusDays((long) (Math.random() * 30)));
+        post = postRepository.save(post);
+
+        for (java.util.Map.Entry<String, String[]> entry : quotes) {
+            Quote quote = new Quote(entry.getKey(), post);
+            for (String themeName : entry.getValue()) {
+                Theme theme = themeRepository.findByName(themeName).orElseThrow();
+                quote.getThemes().add(theme);
+            }
+            quoteRepository.save(quote);
+        }
     }
 }
