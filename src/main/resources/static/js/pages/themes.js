@@ -171,7 +171,7 @@ async function loadThemePosts() {
             <h3 style="margin-bottom:16px;color:var(--color-teal);">${escapeHtml(themesState.currentTheme)}</h3>
             ${sortedGroups.map(g => `
                 <div class="chapter-section">
-                    <div class="chapter-header">${escapeHtml(g.bookTitle)} - Chapter ${g.chapterNumber}: ${escapeHtml(g.chapterTitle)}</div>
+                    <div class="chapter-header">${escapeHtml(g.bookTitle)} - ${escapeHtml(g.chapterTitle)}</div>
                     ${g.posts.map(post => renderPostCard(post)).join('')}
                 </div>
             `).join('')}

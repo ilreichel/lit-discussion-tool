@@ -81,7 +81,7 @@ function renderSidebar(books) {
                     ? book.chapters.map(ch => `
                         <div class="sidebar-chapter" data-chapter-id="${ch.id}" data-chapter-num="${ch.chapterNumber}"
                              tabindex="0" role="button">
-                            Ch ${ch.chapterNumber}: ${escapeHtml(ch.title)}
+                            ${escapeHtml(ch.title)}
                         </div>
                     `).join('')
                     : '<div class="sidebar-chapter" style="color:#999;cursor:default;">No chapters loaded</div>'
@@ -162,19 +162,22 @@ function renderPosts(posts, book) {
 
     container.innerHTML = sortedChapters.map(ch => `
         <div class="chapter-section" id="chapter-section-${ch.posts[0].chapterId}">
-            <div class="chapter-header">Chapter ${ch.chapterNumber}: ${escapeHtml(ch.chapterTitle)}</div>
+            <div class="chapter-header">${escapeHtml(ch.chapterTitle)}</div>
             ${ch.posts.map(post => renderPostCard(post)).join('')}
         </div>
     `).join('');
 }
 
 function renderPostCard(post) {
-    const quotesHtml = post.quotes.map(q => `
-        <div class="post-quote">"${escapeHtml(q.text)}"</div>
+    const quotesHtml = post.quotes.map(q => {
+        const raw = q.text;
+        const clean = raw.replace(/^["\u201C]+/, '').replace(/["\u201D]+$/, '');
+        return `
+        <div class="post-quote">"${escapeHtml(clean)}"</div>
         <div class="post-themes">
             ${q.themes.map((t, i) => `<span class="theme-chip" data-color="${i % 4}" onclick="navigateToTheme('${escapeHtml(t)}')">${escapeHtml(t)}</span>`).join('')}
-        </div>
-    `).join('');
+        </div>`;
+    }).join('');
 
     return `
         <article class="post-card">
