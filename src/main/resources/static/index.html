@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Tool</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <header id="main-header">
+            <h1 id="site-title">Discussion Tool</h1>
+            <div id="login-area">
+                <input type="text" id="username-input" placeholder="Username" value="student1">
+                <button id="login-btn" class="btn btn-primary">Login</button>
+            </div>
+        </header>
+        <main id="content"></main>
+    </div>
+    <div id="modal-overlay" class="modal-overlay hidden"></div>
+    <div id="toast-container"></div>
+
+    <script src="/js/api.js"></script>
+    <script src="/js/router.js"></script>
+    <script src="/js/pages/home.js"></script>
+    <script src="/js/pages/discussion.js"></script>
+    <script src="/js/pages/visualizations.js"></script>
+    <script src="/js/pages/themes.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
